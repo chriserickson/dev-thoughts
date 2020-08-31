@@ -24,9 +24,9 @@ Again, the same can be said for the `setState` function, and/or wrapping the cal
 
 ## An example
 
-Using the example from the video, lets see how this code might look using `setState` and updater functions.
+Using the example from the video, let's see how this code might look using `setState` and updater functions.
 
-First, lets remind ourselves of the example -- a state object with past, present, and future, which should be atomically updated:
+First, let's remind ourselves of the example — a state object with past, present, and future, which should be atomically updated:
 
 ```ts
 type History = {
@@ -36,7 +36,7 @@ type History = {
 };
 ```
 
-Now, we can define our actions as functions. (Note: I am using higher-ordered functions here, but that is not requried):
+Now, we can define our actions as functions. (Note: I am using higher-order functions here, but that is not required):
 
 ```ts
 type Updater = (state: HistoryState) => HistoryState;
@@ -128,7 +128,7 @@ Lets talk about the differences:
 
 My main argument against `useReducer` is how difficult it makes it to navigate, debug, and understand the code.
 
-Consider the equivelent dispatch call:
+Consider the equivalent dispatch call:
 
 ```ts
 dispatch({ action: "push", newValue: textInput });
@@ -213,7 +213,7 @@ const reducer = (previous: HistoryState, action: ActionType): HistoryState => {
 };
 ```
 
-So, in addition to the multi-step navigation already inherent with `useDispatcher`, we now have an additional reducer function to wire all of our action implementations together -- a function with no value beyond action routing, but plenty of opportunity to introduce bugs and obfuscate code. Some of this can be addressed by using really good code organization conventions -- but all of this is unnecessary boilerplate code that can introduce bugs and inhibits understandability.
+So, in addition to the multi-step navigation already inherent with `useDispatcher`, we now have an additional reducer function to wire all of our action implementations together – a function with no value beyond action routing, but plenty of opportunity to introduce bugs and obfuscate code. Some of this can be addressed by using really good code organization conventions – but all of this is unnecessary boilerplate code that can introduce bugs and inhibits understandability.
 
 ## Conclusion
 
