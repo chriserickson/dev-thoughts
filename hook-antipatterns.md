@@ -6,7 +6,7 @@ One is that they allow for composable, reusable, well-encapsulated behaviors to 
 
 The other is that they simplified building components: if you've ever migrated a codebase from class components to functional components and hooks, you likely decomposed some large monolithic components with multiple or very complex render methods into a set of separate functional components. This results in better encapsulation, simpler code, and potentially better performance.
 
-However, like any powerful tool, hooks can be misused. Specifically, they can be used in ways that hinder understandability and refactorability, making code brittle and unapproachable. Again, if you've worked on a sufficiently large codebase you've probably come across some hooks that were extremely complex and/or brittle and made you question whether the entire paradigm should be discarded. Usually this is the product of starting with great code that then evolves in unexpected ways (which is preciesly what any codebase does with a team of > 2 engineers working on it).
+However, like any powerful tool, hooks can be misused. Specifically, they can be used in ways that hinder understandability and refactorability, making code brittle and unapproachable. Again, if you've worked on a sufficiently large codebase you've probably come across some hooks that were extremely complex and/or brittle and made you question whether the entire paradigm should be discarded. Usually this is the product of starting with great code that then evolves in unexpected ways (which is precisely what any codebase does with a team of > 2 engineers working on it).
 
 Here we will explore a few of examples to help illustrate the types of problems that might be encountered, and then propose several principles to help minimize or mitigate these classes of problems.
 
@@ -66,17 +66,17 @@ const Component = () => {
 };
 ```
 
-Lets stop a minute and talk about what we have here. FIrst off, this is a pretty reasonable example that I've come across in several applications. It feels very powerful -- I can now pull the balance into any component that needs it. It is pretty understandable. It might even qualify as "Good Code".
+Lets stop a minute and talk about what we have here. First off, this is a pretty reasonable example that I've come across in several applications. It feels very powerful -- I can now pull the balance into any component that needs it. It is pretty understandable. It might even qualify as "Good Code".
 
 However, there are already the seeds of problems that will plague our application as it grows and is refactored.
 
-### Problem 1 data fetching waterfalls (if using suspense)
+### Problem 1: data fetching waterfalls (if using suspense)
 
 Now, a lot of the new hooks-based data-fetching libraries make use of React's experimental suspense "API", which pauses rendering until the data is available. This is really nice because it prevents having to deal with null/undefined states. Unfortunately, it is also prone to creating waterfalls. In the case above, account balances won't be fetched until exchange rates have successfully been fetched.
 
-Technically, this is more of a pitfall of using suspense -- but whereas it can be mitigated in components (by pushing data fetching to the leaf components and parallelizing multiple data fetching calls in components), it is exacerbated by hooks largely because of the second problem, which that hooks are opaque.
+Technically, this is more of a pitfall of using suspense -- but whereas it can be mitigated in components (by pushing data fetching to the leaf components and parallelizing multiple data fetching calls in components), it is exacerbated by hooks largely because of the second problem, which is that hooks are opaque.
 
-### Problem 2 hooks are opaque
+### Problem 2: hooks are opaque
 
 In our example above, the caller of `useNotionalBalance` has no idea of all the side-effects that will occur by using this hook: it will trigger two network fetches, and depends on the state of the user's query string. While with a small example, reading the source for the hook is not a huge cognitive lift, it becomes drastically more difficult in a real application that might have further composed `useNotionalBalance` to calculate what is "available" (based on holds, etc). There is also likely dozens of these hooks in a single component, making the cognative load quite significant.
 
@@ -141,7 +141,7 @@ const Component = () => {
 
 How does this compare to the first example?
 
-The biggest difference is that it doesn't encapsulate the logic into hooks anymore - instead they are pure functions. This documents their dependencies and makes them easier to test at the expense of more work at the callsite. However, I would argue this also makes them more reusable. For instance, this new version of `calculateNotionalBalance` could be reused to calculate the balance for a subset of accounts, or we could calculate the notional balance in multiple different currencies. This was not possible before.
+The biggest difference is that it doesn't encapsulate the logic into hooks anymore - instead it is in pure functions. Functions make their dependencies explicit and are easier to test at the expense of more work at the callsite. However, I would argue this also makes them more reusable. For instance, this new version of `calculateNotionalBalance` could be reused to calculate the balance for a subset of accounts, or we could calculate the notional balance in multiple different currencies. This was not possible before.
 
 This also eliminates the waterfall concern because the data requirements of the function are exposed as arguments.
 
