@@ -103,6 +103,10 @@ I'm going to point out several things here:
 
 Yes, although a lot fewer of them. They end up being reserved for encapsulating reusable local component behavior.
 
+### A note on enforcement
+
+It is worth noting that unless this is enforced, you end up with the worst of both worlds: some noisy code, but it remains unpredictable. So, if you decide this makes sense, I suggest writing some ES Lint rules that prohibit calling data fetching or global contexts from inside hooks (e.g. no `useSwr`, `useQuery`, `useLazyLoadQuery`, `useParams` inside a hook).
+
 ## A code example
 
 All of this has been pretty abstract -- lets look at an actual example in code. I'll use a financial application because it is an example that is easy to understand.
@@ -343,3 +347,7 @@ A few observations:
 
 1. I can see all of the _inputs_ to calculating a notional balance -- it needs a query that can power the currency converter, and some fields on the account.
 2. The calculation can be reused for different sets of accounts.
+
+## Conclusion
+
+Hooks, especially data-fetching-hooks-with-suspense have been around for a few years now, and I feel like the best practices are still being worked out. After working on several large code bases, I've become convinced that there are some huge pitfalls that are easy to fall into. Avoiding data fetching and global state access from hooks I think avoids a lot of them.
